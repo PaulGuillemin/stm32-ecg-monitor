@@ -1,47 +1,49 @@
-# Provenance et vérification du dépôt
+# Repository provenance and verification
 
-## Période et sources
+## Timeline and sources
 
-- Projet scolaire : 2025, rapport et présentation datés du 27 mars 2025.
-- Préparation du portfolio : 19 octobre 2026.
-- Auteurs du rapport : Paul Guillemin et Tristan Lecourtois.
+- Academic project: 2025, with report and presentation dated 27 March 2025.
+- Portfolio preparation: 19 October 2026.
+- Report authors: Paul Guillemin and Tristan Lecourtois.
 
-Deux copies du firmware ont été comparées : `ECG_backup` dans le dossier scolaire et `ECG` dans l'ancien espace de travail STM32CubeIDE 1.17.0. La seconde a été retenue : elle contient notamment la mise au carré du signal et la mise à jour du texte BPM, alors que la copie scolaire comporte un message fixe `BPM 120` et un appel de mise à jour commenté.
+Two firmware copies were compared: `ECG_backup` in the academic folder and `ECG` in the former STM32CubeIDE 1.17.0 workspace. The latter was selected because it includes signal squaring and BPM text updates, whereas the academic copy contains a fixed `BPM 120` message and a commented-out update call.
 
-Cette sélection ne prouve pas que la copie retenue soit exactement celle de la soutenance. Elle constitue la version de travail la plus représentative retrouvée pendant cette préparation. Les écarts entre rapport et code sont consignés dans la [note technique](technical-notes.md).
+This selection does not prove that the chosen copy is exactly the one used for the project presentation. It is the most representative working snapshot found during this preparation. Differences between the report and code are recorded in the [technical notes](technical-notes.md).
 
-## Sélection des fichiers
+## File selection
 
-Les sources `Core/`, `Drivers/`, les fichiers de projet `.project` et `.cproject`, la configuration `ECG.ioc` et le script de liaison ont été conservés. Les sources et configurations suivies ont été comparées aux originaux par SHA-256 après compilation ; les éventuelles modifications automatiques de l'IDE ont été vérifiées.
+The `Core/` and `Drivers/` sources, `.project` and `.cproject` project files, `ECG.ioc` configuration and linker script were retained. Tracked sources and configuration were compared with the originals using SHA-256 after compilation to check for automatic IDE changes.
 
-Les anciens binaires, objets, fichiers de lancement personnels, réglages locaux, caches et supports de cours non nécessaires ne sont pas inclus dans l'historique. Les documents de projet sélectionnés sont copiés sans réécriture. Les figures conservées ne sont ni des images générées ni de nouvelles acquisitions.
+Old binaries, object files, personal launch configurations, local settings, caches and unrelated course materials are excluded from the history. Selected original project documents are copied without rewriting. Preserved figures are neither generated images nor new acquisitions.
 
-Les photos et captures sélectionnées proviennent du dossier ECG. `led-display.jpg` est extrait de la figure 18, page 16 du rapport. Les images du README illustrent le projet de 2025 ; les périodes d'acquisition et les conditions ne sont pas suffisamment établies pour en tirer une comparaison chiffrée du rapport signal/bruit.
+Selected photos and captures come from the ECG folder. `led-display.jpg` was extracted from Figure 18 on page 16 of the report. README images illustrate the 2025 project; acquisition windows and conditions are not sufficiently established to calculate a quantitative signal-to-noise comparison.
 
-## Compilation effectuée
+The original French reports, slides, captures and source comments remain historical archives. Portfolio documentation and diagram labels written for this repository are in English.
 
-| Contrôle | Résultat |
+## Build performed
+
+| Check | Result |
 | --- | --- |
-| Importation dans un espace CubeIDE distinct | Projet `ECG` reconnu |
+| Import into a separate CubeIDE workspace | Project `ECG` recognised |
 | Configuration | Debug |
 | IDE | STM32CubeIDE 1.19.0 |
-| Compilateur | GNU Tools for STM32 13.3.rel1 |
-| Cible | STM32L432KCUx, Cortex-M4F, ABI flottante matérielle |
-| Compilation et édition de liens | Réussies, 0 erreur et 0 avertissement |
-| Binaire produit | `ECG.elf` |
-| Résumé `arm-none-eabi-size` | text : 32348, data : 576, bss : 2720 octets |
+| Compiler | GNU Tools for STM32 13.3.rel1 |
+| Target | STM32L432KCUx, Cortex-M4F, hardware floating-point ABI |
+| Compilation and linking | Successful, 0 errors and 0 warnings |
+| Generated binary | `ECG.elf` |
+| `arm-none-eabi-size` summary | text: 32348, data: 576, bss: 2720 bytes |
 
-Ces chiffres sont ceux de la construction Debug du 19 octobre 2026. `text`, `data` et `bss` sont les catégories du résumé de l'outil, pas une mesure de consommation ni du besoin maximal de pile à l'exécution. Les produits de construction sont exclus du dépôt.
+These figures come from the Debug build on 19 October 2026. `text`, `data` and `bss` are the tool's output categories, not measurements of power consumption or maximum runtime stack usage. Build outputs are excluded from the repository.
 
-## Vérifications documentaires
+## Documentation checks
 
-Les fichiers de projet ont été lus, les chemins locaux du README et de la documentation contrôlés, les images sélectionnées inspectées et les notices des composants tiers conservées. Une recherche ciblée d'identifiants, de clés et de chemins personnels a été effectuée sur les fichiers retenus. Elle ne constitue pas une garantie exhaustive d'absence de données sensibles.
+Project files were read, local README and documentation links checked, selected images inspected and third-party notices retained. A targeted search for credentials, keys and personal paths was performed on the selected files. It does not guarantee that all sensitive information has been detected.
 
-## Vérifications non effectuées
+## Checks not performed
 
-- Aucun flash ni essai avec une carte physique.
-- Aucune nouvelle acquisition ECG.
-- Aucune mesure nouvelle de cadence d'échantillonnage, de précision de détection ou de consommation.
-- Aucune certification ou validation clinique.
+- No flashing or testing on a physical board.
+- No new ECG acquisition.
+- No new measurement of sampling rate, detection accuracy or power consumption.
+- No certification or clinical validation.
 
-La compilation réussie valide la construction de l'archive, pas son bon fonctionnement matériel ou numérique. Le dépôt présente ce travail passé et ses limites connues.
+The successful build verifies that the archive can be compiled and linked, not its hardware or numerical behaviour. This repository presents past work and its known limitations.

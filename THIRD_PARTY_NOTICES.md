@@ -1,28 +1,28 @@
-# Auteurs, composants et provenance
+# Authors, components and provenance
 
-## Travail étudiant
+## Student work
 
-Le rapport et la présentation de mars 2025 sont signés **Paul Guillemin et Tristan Lecourtois**, Mines Saint-Étienne. Leur contenu collectif et les documents techniques réutilisés ne sont pas placés automatiquement sous une nouvelle licence par la préparation de ce dépôt.
+The March 2025 report and presentation are authored by **Paul Guillemin and Tristan Lecourtois**, Mines Saint-Étienne. Preparing this repository does not automatically place their joint work or reused technical documents under a new licence.
 
-Paul Guillemin a précisé que les deux auteurs ont travaillé en binôme sur l'ensemble des tâches, parfois en proposant deux versions avant de retenir la meilleure solution. Les crédits du README présentent cette contribution commune et la distinguent des composants réutilisés.
+Paul Guillemin confirmed that both authors worked together on all tasks, sometimes developing two versions before selecting the better solution. The README presents this shared contribution separately from reused components.
 
-## Logiciel
+## Software
 
-| Composant | Attribution présente dans les sources | Notice conservée |
+| Component | Attribution in the sources | Preserved notice |
 | --- | --- | --- |
-| HAL STM32L4 | STMicroelectronics | `firmware/Drivers/STM32L4xx_HAL_Driver/LICENSE.txt` |
-| CMSIS | ARM et contributeurs indiqués dans les fichiers | `firmware/Drivers/CMSIS/LICENSE.txt` |
-| Support du composant STM32L4 | STMicroelectronics | `firmware/Drivers/CMSIS/Device/ST/STM32L4xx/LICENSE.txt` |
-| Code d'initialisation généré | STMicroelectronics, en-têtes des fichiers `Core/` | Mentions originales conservées |
-| Pilote matrice MAX7219 | Khaled Magdy / DeepBlueMbedded, en-têtes de `DOT_MATRIX.c`, `.h` et fichiers `cfg` | Attribution originale conservée ; aucune licence supplémentaire identifiée dans ces fichiers |
+| STM32L4 HAL | STMicroelectronics | `firmware/Drivers/STM32L4xx_HAL_Driver/LICENSE.txt` |
+| CMSIS | ARM and contributors identified in the files | `firmware/Drivers/CMSIS/LICENSE.txt` |
+| STM32L4 device support | STMicroelectronics | `firmware/Drivers/CMSIS/Device/ST/STM32L4xx/LICENSE.txt` |
+| Generated initialisation code | STMicroelectronics, headers in `Core/` | Original notices retained |
+| MAX7219 matrix driver | Khaled Magdy / DeepBlueMbedded, headers in `DOT_MATRIX.c`, `.h` and `cfg` files | Original attribution retained; no additional licence identified in these files |
 
-Ce dépôt n'attribue pas une licence globale nouvelle à des fichiers tiers. Les notices et conditions propres à chaque composant restent à examiner pour toute redistribution envisagée.
+This repository does not assign a new global licence to third-party files. Each component's own notices and conditions need consideration before any planned redistribution.
 
-## Images et documents
+## Images and documents
 
-- Les captures de signaux, la photo de fabrication et le dessin de carte support proviennent des archives du projet ECG.
-- La photo `docs/media/led-display.jpg` est extraite de la figure 18 du rapport collectif.
-- Le rapport contient un schéma de carte ECG portant l'attribution François Bernier / EMSE / ID-Fab. Ce schéma n'est pas revendiqué comme une conception originale de Paul ou de Tristan.
-- Les références bibliographiques et illustrations tierces du rapport conservent les attributions portées dans ce document.
+- Signal captures, the fabrication photo and the carrier-board drawing come from the ECG project archives.
+- `docs/media/led-display.jpg` was extracted from Figure 18 of the joint report.
+- The report includes an ECG board schematic attributed to François Bernier / EMSE / ID-Fab. It is not claimed as an original design by Paul or Tristan.
+- Bibliographic references and third-party illustrations retain their attribution in the original report.
 
-Les autorisations de publication du travail collectif et des éléments tiers doivent être établies avant une diffusion publique. La présence locale de ces fichiers ne constitue pas à elle seule une autorisation de les relicencier.
+Permission to publish joint work and third-party material must be established before public release. Possession of these files does not by itself authorise relicensing them.

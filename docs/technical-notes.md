@@ -1,44 +1,44 @@
-# État technique du firmware conservé
+# Technical state of the preserved firmware
 
-Le firmware a été copié sans modification fonctionnelle depuis une version du projet CubeIDE d'origine. Les constats ci-dessous décrivent cette archive ; ils ne remettent pas en scène un développement historique et ne constituent pas une validation médicale.
+The firmware was copied without functional changes from an original CubeIDE project snapshot. The observations below describe this archive; they do not reconstruct a past development process or establish medical validity.
 
-## Chaîne réellement appelée
+## Actual processing chain
 
-Dans `Core/Src/main.c`, `HAL_ADC_ConvCpltCallback()` appelle :
+In `Core/Src/main.c`, `HAL_ADC_ConvCpltCallback()` calls:
 
 ```text
 ADC → remove_spikes → remove_outliers → low_pass_filter
     → moving_average_filter → square_signal
-    → conversion en uint16_t → detect_r_peak → UART
+    → conversion to uint16_t → detect_r_peak → UART
 ```
 
-- ADC : résolution 12 bits, canal 15, déclenchement logiciel et mode continu, sans DMA.
-- Passe-bas : récurrence entière `y = (15 × y_précédent + x) / 16`.
-- Moyenne glissante : fenêtre de 25 échantillons.
-- Détection : entrée supérieure à 45000, verrou et compteur réfractaire ; le changement de signe de dérivée intervient dans le réarmement.
-- Intervalle : TIM7 configuré avec un prédiviseur de 8000 à partir de 80 MHz, soit 10000 ticks/s. La formule du code est `bpm = 600000 / compteur`.
-- Affichage : texte BPM mis à jour toutes les trois détections. Le pilote MAX7219 utilise le timer 16 pour le défilement.
-- Série : signal traité, une valeur par ligne, envoi bloquant depuis l'interruption ADC.
+- ADC: 12-bit resolution, channel 15, software start and continuous mode, no DMA.
+- Low-pass filter: integer recurrence `y = (15 × previous_y + x) / 16`.
+- Moving average: 25-sample window.
+- Detection: input above 45000, a latch and refractory counter; the derivative sign change participates in rearming.
+- Interval: TIM7 uses a prescaler of 8000 from an 80 MHz clock, giving 10000 ticks/s. The code calculates `bpm = 600000 / counter`.
+- Display: BPM text updated every three detections. The MAX7219 driver uses timer 16 for scrolling.
+- Serial output: one processed signal value per line, transmitted synchronously from the ADC interrupt.
 
-## Écarts avec le rapport
+## Differences from the report
 
-| Présentation du rapport | Implémentation conservée |
+| Report description | Preserved implementation |
 | --- | --- |
-| Butterworth d'ordre 2 à 10 Hz pour 1 kHz d'échantillonnage | Passe-bas récursif du premier ordre et moyenne glissante ; acquisition non déclenchée par un timer périodique |
-| Pic repéré par seuil et passage de dérivée positive à négative | Déclenchement sur seuil ; dérivée utilisée pour le réarmement |
-| Transmission du signal et du rythme cardiaque | Callback série émettant seulement le signal traité |
-| Affichage OLED évoqué dans certains titres | Démonstrateur final documenté sur matrice LED commerciale MAX7219 |
+| Second-order Butterworth at 10 Hz with 1 kHz sampling | First-order recursive low-pass filter and moving average; acquisition is not triggered by a periodic timer |
+| Peak detected through a threshold and a positive-to-negative derivative transition | Threshold-triggered detection; derivative used for rearming |
+| Transmission of the signal and heart rate | Serial callback sends only the processed signal |
+| OLED display mentioned in some headings | Final demonstrator documented with a commercial MAX7219 LED matrix |
 
-Le fichier MATLAB `docs/design/filtre.fda` est conservé comme document de conception. Sa présence ne prouve pas que les coefficients correspondants sont implémentés dans ce firmware.
+The MATLAB file `docs/design/filtre.fda` is preserved as a design document. Its presence does not prove that the corresponding coefficients are implemented in this firmware.
 
-## Limites à traiter avant une réutilisation robuste
+## Limitations to address before robust reuse
 
-1. **Mise au carré et largeur numérique.** `square_signal()` renvoie un entier 32 bits, affecté ensuite à `uint16_t`. Le résultat est tronqué lorsque la valeur dépasse 65535, ce qui peut modifier la forme du signal et la détection.
-2. **Suppression des pics parasites.** `remove_spikes()` affecte `previous_value = input` avant de retourner cette même valeur lorsque le seuil de variation est dépassé. Ce chemin ne rejette donc pas le pic comme son nom le suggère.
-3. **État partagé.** `previous_value` est utilisé à la fois dans `remove_spikes()` et pour calculer la dérivée du signal traité. Il ne représente pas simplement l'échantillon filtré précédent.
-4. **Bornes des valeurs aberrantes.** Les limites calculées en flottant sont converties en entiers non signés sans saturation explicite ; une borne basse négative doit être traitée avant conversion.
-5. **Temps et période réfractaire.** Le compteur réfractaire est décrémenté par appel ADC, pas en millisecondes. La durée dépend du débit effectif, lui-même affecté par le calcul et l'émission UART bloquante.
-6. **Calcul du rythme.** Le compteur TIM7 peut être nul ou déborder ; la division n'est pas protégée et l'intervalle n'est pas moyenné. Les macros de limites BPM ne suffisent pas à filtrer ce résultat dans le chemin consulté.
-7. **Périphériques résiduels.** TIM15 est initialisé pour une capture, mais n'est pas utilisé dans le traitement principal. Le pilote réécrit certains réglages du SPI et de TIM16.
+1. **Squaring and numeric width.** `square_signal()` returns a 32-bit integer that is then assigned to `uint16_t`. Values above 65535 are truncated, which can alter the signal shape and detection.
+2. **Spike rejection.** `remove_spikes()` assigns `previous_value = input` before returning that same value when the variation threshold is exceeded. This path therefore does not reject the spike as its name suggests.
+3. **Shared state.** `previous_value` is used both inside `remove_spikes()` and to calculate the processed signal derivative. It does not simply represent the previous filtered sample.
+4. **Outlier bounds.** Floating-point bounds are converted to unsigned integers without explicit saturation; a negative lower bound needs handling before conversion.
+5. **Timing and refractory period.** The refractory counter is decremented per ADC callback, not per millisecond. Its duration depends on the effective throughput, which is affected by computation and blocking UART transmission.
+6. **Heart-rate calculation.** The TIM7 counter may be zero or wrap; division is unprotected and the interval is not averaged. BPM limit macros do not filter this result in the inspected execution path.
+7. **Unused configuration.** TIM15 is initialised for capture but is not used in the main processing path. The driver overwrites some SPI and TIM16 settings.
 
-Ces points ont été documentés pendant la préparation du portfolio. Aucun correctif algorithmique n'a été appliqué : une éventuelle version améliorée devra faire l'objet de changements datés du moment de leur réalisation et de tests distincts.
+These observations were documented during portfolio preparation. No algorithmic correction was applied: any improved version should use commits dated when the changes are actually made and undergo separate testing.

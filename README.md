@@ -1,106 +1,99 @@
-# ECG embarqué sur STM32
+# Embedded ECG Monitor on STM32
 
-**Du signal physiologique bruité à son traitement sur microcontrôleur et à l'affichage du rythme cardiaque.**
+**From a noisy physiological signal to on-device processing and heart-rate display.**
 
-Projet réalisé en binôme aux Mines Saint-Étienne, dans le cursus ISMIN, et présenté le **27 mars 2025**. Ce dépôt rassemble le firmware, les résultats expérimentaux et les documents de ce travail pour mon portfolio.
+A joint project completed at Mines Saint-Étienne as part of the ISMIN engineering programme and presented on **27 March 2025**. This repository brings together the firmware, experimental results and project documents for my portfolio.
 
-`C embarqué` · `STM32L432KC` · `Traitement du signal` · `ADC / interruptions` · `SPI / UART` · `Microfabrication`
+`Embedded C` · `STM32L432KC` · `Signal processing` · `ADC / interrupts` · `SPI / UART` · `Microfabrication`
 
-![Signal ECG après traitement, capture expérimentale du projet](docs/media/ecg-processed.png)
+![Processed ECG signal captured during the project](docs/media/ecg-processed.png)
 
-*Signal après traitement présenté dans le rapport de 2025. Les pics cardiaques ressortent de la trace ; cette capture ne constitue pas une mesure de précision clinique.*
+*Processed signal shown in the 2025 report. Cardiac peaks stand out from the trace; this capture is not a measurement of clinical accuracy.*
 
-## Le projet
+## The project
 
-Nous avons travaillé sur une chaîne d'acquisition ECG, depuis la fabrication d'électrodes en salle blanche jusqu'au traitement numérique et à la restitution du signal. Le prototype associait une carte de conditionnement analogique, une **NUCLEO-L432KC**, une visualisation sur ordinateur et une matrice LED pilotée par **MAX7219**.
+We worked on an ECG acquisition chain, from electrode fabrication in a cleanroom to digital processing and signal output. The prototype combined an analogue signal-conditioning board, a **NUCLEO-L432KC**, computer-based visualisation and an LED matrix driven by a **MAX7219**.
 
-Le principal défi était de rendre un signal fortement bruité suffisamment exploitable pour repérer les battements. Un second défi concernait l'affichage : la matrice OLED fabriquée en salle blanche présentait des fuites de courant et une tension de seuil trop élevée. Le démonstrateur a finalement utilisé une matrice LED du commerce.
+The main challenge was to make a heavily noisy signal usable for detecting heartbeats. Display hardware presented another challenge: the OLED matrix fabricated in the cleanroom suffered from current leakage and an excessively high turn-on voltage. The demonstrator ultimately used a commercially available LED matrix.
 
-## Travail réalisé et compétences mobilisées
+## My contribution and skills demonstrated
 
-Projet de **Paul Guillemin et Tristan Lecourtois**. Nous avons travaillé ensemble sur l'ensemble des tâches du projet. Pour certaines étapes, nous avons proposé deux versions, puis comparé les approches pour retenir la meilleure solution. Les réalisations ci-dessous reflètent ce travail en binôme, auquel j'ai participé tout au long du projet.
+A project by **Paul Guillemin and Tristan Lecourtois**. We worked together on all project tasks. At some stages, we developed two versions and compared the approaches to select the better solution. The work below reflects this joint effort, in which I participated throughout the project.
 
-| Travail réalisé | Compétences mobilisées |
+| Work completed | Skills demonstrated |
 | --- | --- |
-| Fabrication et caractérisation d'électrodes et d'une matrice OLED | Photolithographie, dépôt de couches minces, caractérisation en salle blanche |
-| Intégration de la chaîne d'acquisition ECG | Conditionnement analogique, mesures à l'oscilloscope, analyse du bruit |
-| Programmation du traitement sur STM32 | C, ADC, interruptions, filtrage et extraction d'événements |
-| Restitution du résultat | Communication UART, visualisation SerialPlot, pilotage SPI d'une matrice LED |
-| Essais et choix d'une solution d'affichage de remplacement | Analyse expérimentale, diagnostic et adaptation aux limites matérielles |
+| Fabricating and characterising electrodes and an OLED matrix | Photolithography, thin-film deposition, cleanroom characterisation |
+| Integrating the ECG acquisition chain | Analogue signal conditioning, oscilloscope measurements, noise analysis |
+| Implementing processing on STM32 | C, ADC, interrupts, filtering and event detection |
+| Presenting the output | UART communication, SerialPlot visualisation, SPI control of an LED matrix |
+| Testing and selecting a replacement display | Experimental analysis, troubleshooting and adaptation to hardware limitations |
 
-Le pilote de matrice et les bibliothèques STM32 sont des composants tiers réutilisés, identifiés dans les [crédits](THIRD_PARTY_NOTICES.md).
+The matrix driver and STM32 libraries are reused third-party components, identified in the [credits](THIRD_PARTY_NOTICES.md).
 
-## Résultats du projet
+## Project results
 
-Les documents de 2025 présentent l'acquisition d'un signal ECG, sa visualisation, les étapes de filtrage et le démonstrateur d'affichage. Les captures conservées illustrent les essais successifs ; elles ne proviennent pas nécessairement de la même séquence d'acquisition et ne forment pas un benchmark quantitatif.
+The 2025 documents describe ECG acquisition, visualisation, filtering stages and the display demonstrator. The preserved captures illustrate successive experiments; they do not necessarily come from the same acquisition sequence and do not constitute a quantitative benchmark.
 
-| Acquisition bruitée | Signal après prétraitement |
+| Noisy acquisition | Signal after preprocessing |
 | --- | --- |
-| ![Capture d'acquisition bruitée](docs/media/ecg-acquisition.png) | ![Capture SerialPlot après prétraitement](docs/media/ecg-filtered.png) |
+| ![Noisy acquisition capture](docs/media/ecg-acquisition.png) | ![SerialPlot capture after preprocessing](docs/media/ecg-filtered.png) |
 
 <details>
-<summary>Voir les éléments matériels du projet</summary>
+<summary>See the project hardware</summary>
 
-![Pixels de la matrice OLED fabriquée en salle blanche](docs/media/oled-fabrication.jpg)
+![Pixels on the OLED matrix fabricated in the cleanroom](docs/media/oled-fabrication.jpg)
 
-*Matrice fabriquée en salle blanche : certains pixels s'allument, avec les limitations décrites dans le rapport.*
+*Cleanroom-fabricated matrix: some pixels light up, subject to the limitations described in the report.*
 
-![Matrice LED commerciale utilisée pour l'affichage](docs/media/led-display.jpg)
+![Commercial LED matrix used for the display](docs/media/led-display.jpg)
 
-*Matrice LED avec MAX7219, illustration extraite de la figure 18 du rapport.*
+*LED matrix with MAX7219, image extracted from Figure 18 of the report.*
 
 </details>
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    E[Électrodes ECG] --> A[Conditionnement analogique]
-    A --> ADC[ADC du STM32]
-    ADC --> F[Prétraitement numérique]
-    F --> U[UART vers SerialPlot]
-    F --> D[Détection des battements]
-    D --> B[Estimation du rythme]
-    B --> M[SPI vers matrice LED MAX7219]
-```
+![ECG acquisition, processing and output architecture](docs/media/architecture.svg)
 
-Le firmware conservé enchaîne un traitement des valeurs aberrantes, un passe-bas récursif, une moyenne glissante et une mise au carré. Il contient ensuite une détection par seuil et un calcul d'intervalle entre événements. Le traitement est appelé depuis l'interruption de fin de conversion ADC.
+The preserved firmware applies outlier processing, a recursive low-pass filter, a moving average and squaring. It then performs threshold-based detection and calculates the interval between events. Processing runs in the ADC conversion-complete interrupt callback.
 
-**Le dépôt conserve une version de travail du firmware, recompilée sans modification fonctionnelle.** Certaines descriptions du rapport et certains choix d'implémentation diffèrent : filtre réellement codé, déclenchement de la détection et format série notamment. Ces écarts et les limites numériques sont détaillés dans la [note technique](docs/technical-notes.md).
+**This repository preserves a working snapshot of the firmware, rebuilt without functional changes.** Some report descriptions differ from the implementation, particularly the filter, detection trigger and serial output format. These differences and numerical limitations are documented in the [technical notes](docs/technical-notes.md).
 
-## Parcourir le dépôt
+## Repository guide
 
-| Élément | Contenu |
+| Item | Contents |
 | --- | --- |
-| [Firmware STM32CubeIDE](firmware/) | Code C, configuration CubeMX, startup, script de liaison et pilotes requis |
-| [Rapport de mars 2025](docs/reports/ecg-report-2025.pdf) | Fabrication, électronique, mesures et démonstrateur |
-| [Présentation de mars 2025](docs/reports/ecg-presentation-2025.pdf) | Synthèse du projet présenté en binôme |
-| [Guide de reproduction](docs/reproduction.md) | Importation, compilation, brochage logiciel et protocole de vérification |
-| [Note technique](docs/technical-notes.md) | Chaîne de traitement conservée et limites de l'archive |
-| [Provenance et vérification](docs/validation.md) | Version sélectionnée et contrôles réalisés lors de la préparation du dépôt |
+| [STM32CubeIDE firmware](firmware/) | C source, CubeMX configuration, startup code, linker script and required drivers |
+| [March 2025 report — original French archive](docs/reports/ecg-report-2025.pdf) | Fabrication, electronics, measurements and demonstrator |
+| [March 2025 presentation — original French archive](docs/reports/ecg-presentation-2025.pdf) | Summary of the project presented jointly |
+| [Reproduction guide](docs/reproduction.md) | Importing, building, firmware pin assignments and verification procedure |
+| [Technical notes](docs/technical-notes.md) | Preserved processing chain and archive limitations |
+| [Provenance and verification](docs/validation.md) | Selected snapshot and checks performed during repository preparation |
 
-## Reproduire la compilation
+## Reproduce the build
 
-1. Ouvrir un espace de travail STM32CubeIDE distinct.
-2. Choisir **File → Import → General → Existing Projects into Workspace**.
-3. Sélectionner le dossier `firmware/`, puis importer le projet nommé `ECG`.
-4. Choisir la configuration **Debug** et lancer **Build Project**.
+1. Open a separate STM32CubeIDE workspace.
+2. Select **File → Import → General → Existing Projects into Workspace**.
+3. Select the `firmware/` directory and import the project named `ECG`.
+4. Select the **Debug** configuration and run **Build Project**.
 
-La compilation a été vérifiée le **19 octobre 2026** avec **STM32CubeIDE 1.19.0** et **GNU Tools for STM32 13.3.rel1** : **0 erreur, 0 avertissement**. Aucun nouveau test sur carte n'a été réalisé à cette occasion.
+The build was verified on **19 October 2026** with **STM32CubeIDE 1.19.0** and **GNU Tools for STM32 13.3.rel1**: **0 errors, 0 warnings**. No new board-level test was performed at that time.
 
-Les détails du matériel et des essais sont dans le [guide de reproduction](docs/reproduction.md). Ce projet est un prototype pédagogique : il n'est pas présenté comme un dispositif médical validé.
+Hardware and test details are provided in the [reproduction guide](docs/reproduction.md). This is an educational prototype, not a validated medical device.
 
-## Limites et suites possibles
+## Limitations and possible next steps
 
-- Les images et les essais du rapport témoignent du projet de 2025 ; ils ne valident pas à nouveau le firmware archivé sur matériel.
-- La chaîne numérique comporte des points à reprendre avant un usage robuste : gestion de la mise au carré, temporisation de détection et émission série bloquante.
-- La matrice OLED fabriquée n'a pas été retenue pour l'affichage final.
-- Une évolution pourrait établir un échantillonnage périodique mesuré, sécuriser les calculs et quantifier les performances sur un jeu de signaux de référence. Ces améliorations ne sont pas réalisées dans cette archive.
+- The report images and experiments document the 2025 project; they do not revalidate the archived firmware on hardware.
+- The digital processing chain needs further work before robust reuse: squaring arithmetic, detection timing and blocking serial transmission.
+- The fabricated OLED matrix was not used for the final display.
+- Future work could establish measured periodic sampling, protect arithmetic operations and quantify performance against reference signals. These improvements are not implemented in this archive.
 
-## Auteurs et contexte
+## Authors and context
 
-**Paul Guillemin · Tristan Lecourtois** — Mines Saint-Étienne, cursus ISMIN, projet ECG de 2025.
+**Paul Guillemin · Tristan Lecourtois** — Mines Saint-Étienne, ISMIN engineering programme, 2025 ECG project.
 
-Le projet a été présenté le 27 mars 2025. La préparation de ce dépôt portfolio a commencé le 19 octobre 2026. Les commits d'import sont datés de leur création ; aucun historique de développement passé n'a été inventé.
+The project was presented on 27 March 2025. Preparation of this portfolio repository began on 19 October 2026. Import commits use their actual creation dates; no past development history has been fabricated.
 
-Les documents et bibliothèques conservent leurs attributions. Aucune licence globale nouvelle n'est attribuée à l'ensemble du dépôt ; consulter les [mentions et crédits](THIRD_PARTY_NOTICES.md).
+Original reports, presentation slides, experimental captures and firmware comments are retained as historical source material, including their original language. All portfolio documentation written for this repository is in English.
+
+Documents and libraries retain their original attribution. No new repository-wide licence has been assigned; see the [notices and credits](THIRD_PARTY_NOTICES.md).
