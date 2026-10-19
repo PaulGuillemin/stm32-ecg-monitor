@@ -18,7 +18,7 @@ Le principal défi était de rendre un signal fortement bruité suffisamment exp
 
 ## Travail réalisé et compétences mobilisées
 
-Projet de **Paul Guillemin et Tristan Lecourtois**. Le rapport décrit les réalisations du binôme ; la répartition individuelle n'y est pas détaillée. Les éléments ci-dessous présentent donc notre travail collectif.
+Projet de **Paul Guillemin et Tristan Lecourtois**. Nous avons travaillé ensemble sur l'ensemble des tâches du projet. Pour certaines étapes, nous avons proposé deux versions, puis comparé les approches pour retenir la meilleure solution. Les réalisations ci-dessous reflètent ce travail en binôme, auquel j'ai participé tout au long du projet.
 
 | Travail réalisé | Compétences mobilisées |
 | --- | --- |

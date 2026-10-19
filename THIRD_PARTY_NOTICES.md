@@ -4,7 +4,7 @@
 
 Le rapport et la présentation de mars 2025 sont signés **Paul Guillemin et Tristan Lecourtois**, Mines Saint-Étienne. Leur contenu collectif et les documents techniques réutilisés ne sont pas placés automatiquement sous une nouvelle licence par la préparation de ce dépôt.
 
-La répartition individuelle des travaux n'est pas détaillée dans les documents conservés. Les crédits du README distinguent le travail du binôme des composants réutilisés.
+Paul Guillemin a précisé que les deux auteurs ont travaillé en binôme sur l'ensemble des tâches, parfois en proposant deux versions avant de retenir la meilleure solution. Les crédits du README présentent cette contribution commune et la distinguent des composants réutilisés.
 
 ## Logiciel
 
